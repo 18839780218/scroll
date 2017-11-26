@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>滚动加载</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+
+    </style>
+</head>
+<body>
+</body>
+</html>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    var page = 0;
+    $.ajax({
+        url:"http://api.paicl.net/api/test/datas?page=" + page,
+        type:"get",
+        dataType:"JSON",
+        success:function(datas){
+            for(data of datas){
+                var aDiv = $("<div>").html(data.id);
+                var aImg = $("<img>").attr("src",data.img).css({width:200,height:200});
+                aDiv.append(aImg);
+                $("body").append(aDiv);
+            }
+        },
+        error:function (e) {
+            alert(e+"未知错误")
+        }
+    });
+    $(window).scroll(function () {
+        console.log($(this));
+        var scrollTop = $(this).scrollTop();
+        var scrollHeight = $(document).height();
+        var windowHeight = $(this).height();
+        console.log(scrollTop,scrollHeight,windowHeight);
+        if (scrollTop + windowHeight == scrollHeight) {
+                page ++;
+            $.ajax({
+                url:"http://api.paicl.net/api/test/datas?page=" + page,
+                type:"get",
+                dataType:"JSON",
+                success:function(datas){
+                    for(data of datas){
+                        var aDiv = $("<div>").html(data.id);
+                        var aImg = $("<img>").attr("src",data.img).css({width:200,height:200});
+                        aDiv.append(aImg);
+                        $("body").append(aDiv);
+                    }
+                },
+                error:function (e) {
+                    alert(e+"未知错误")
+                }
+            });
+        }
+    });
+</script>
